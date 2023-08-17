@@ -3,11 +3,14 @@ import "./index.css";
 import nx_wave_hero from "./images/nx_wave/nx_wave_hero.png";
 import logo_uni_dbc4c88973 from "./images/logo_uni_dbc4c88973.png";
 import nxt_wave_bg from "./videos/nxt_wave_bg.mp4";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 function App() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [applyButtonText, setApplyButtonText] = useState("Apply Now");
+  const [showDownloadButton, setshowDownloadButton] = useState(false);
+  const [showLoadingSpinner, setshowLoadingSpinner] = useState(false);
 
   const isPhoneNumberValid = phoneNumber.length === 10;
 
@@ -29,6 +32,15 @@ function App() {
   const handleCheckboxChange = (e) => {
     setIsCheckboxChecked(e.target.checked);
     setIsFormValid(phoneNumber.length === 10 && e.target.checked);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    setApplyButtonText("Applying...");
+    setTimeout(() => {
+      setshowDownloadButton(true);
+    }, 3000);
   };
 
   return (
@@ -91,79 +103,84 @@ function App() {
                 Zero Forex Markup
               </p>
             </div>
-            <div className="hidden md:block">
-              <div className="flex justify-between items-center max-w-[94vw]">
-                <div className="flex flex-col">
-                  <form>
-                    <div className="flex bg-black p-1 pl-2 rounded-xl justify-between">
-                      <div className="flex items-center">
-                        <input
-                          className="bg-black border-0 outline-none text-white p-1 placeholder-[#7E8587] w-44"
-                          placeholder="Enter Phone Number"
-                          value={phoneNumber}
-                          onChange={handlePhoneNumberChange}
-                        />
-                        {phoneNumber &&
-                          (isPhoneNumberValid ? (
-                            <span className="text-green-500 ml-2">
-                              &#x2714;
-                            </span>
-                          ) : (
-                            <span className="text-red-500 ml-2">!</span>
-                          ))}
-                      </div>
-                      <button
-                        type="submit"
-                        className={`text-center text-sm leading-7 justify-between pt-2 ml-2 bg-yellow-400 rounded-xl z-10 py-2 px-4 ${
-                          !isFormValid ? "disabled:cursor-not-allowed" : ""
-                        }`}
-                        disabled={!isFormValid}
-                      >
-                        <span>Apply Now</span>
-                      </button>
-                    </div>
-                  </form>
 
-                  <div className="consent flex items-center py-4 px-2 max-w-xs">
-                    <input
-                      type="checkbox"
-                      id="consent-msg"
-                      checked={isCheckboxChecked}
-                      onChange={handleCheckboxChange}
-                      maxLength={10}
-                    />
-                    <label
-                      htmlFor="consent-msg"
-                      className="consent text-white md:text-black text-[10px] leading-3"
-                    >
-                      You agree to be contacted by Uni Cards over Call, SMS,
-                      Email or WhatsApp to guide you through your application.
-                    </label>
+            <div className="hidden md:block">
+              {!showDownloadButton && (
+                <div className="flex justify-between items-center max-w-[94vw]">
+                  <div className="flex flex-col">
+                    <form onSubmit={handleSubmit}>
+                      <div className="flex bg-black p-1 pl-2 rounded-xl justify-between">
+                        <div className="flex items-center">
+                          <input
+                            className="bg-black border-0 outline-none text-white p-1 placeholder-[#7E8587] w-44"
+                            placeholder="Enter Phone Number"
+                            value={phoneNumber}
+                            onChange={handlePhoneNumberChange}
+                          />
+                          {phoneNumber &&
+                            (isPhoneNumberValid ? (
+                              <span className="text-green-500 ml-2">
+                                &#x2714;
+                              </span>
+                            ) : (
+                              <span className="text-red-500 ml-2">!</span>
+                            ))}
+                        </div>
+                        <button
+                          type="submit"
+                          className={`text-center text-sm leading-7 justify-between pt-2 ml-2 bg-yellow-400 rounded-xl z-10 py-2 px-4 ${
+                            !isFormValid ? "disabled:cursor-not-allowed" : ""
+                          }`}
+                          disabled={!isFormValid}
+                        >
+                          <span>{applyButtonText}</span>
+                        </button>
+                      </div>
+                    </form>
+                    <div className="consent flex items-center py-4 px-2 max-w-xs">
+                      <input
+                        type="checkbox"
+                        id="consent-msg"
+                        checked={isCheckboxChecked}
+                        onChange={handleCheckboxChange}
+                        maxLength={10}
+                      />
+                      <label
+                        htmlFor="consent-msg"
+                        className="consent text-white md:text-black text-[10px] leading-3"
+                      >
+                        You agree to be contacted by Uni Cards over Call, SMS,
+                        Email or WhatsApp to guide you through your application.
+                      </label>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex hidden max-w-xs flex-col justify-start">
-                <div className="w-full max-w-[300px]">
-                  <a
-                    href="https://uni-growth.onelink.me/v6cm/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block google-btn-2 font-medium p-4 rounded-lg z-10 bg-[#FDEF78] text-black -mt-2 disabled:bg-[#AEAB8C]"
-                  >
-                    <div className="w-full flex justify-center items-center">
-                      <span>Download</span>
-                    </div>
-                  </a>
+              )}
+
+              {showDownloadButton && (
+                <div className="flex max-w-xs flex-col justify-start">
+                  <div className="w-full max-w-[300px]">
+                    <a
+                      href="https://uni-growth.onelink.me/v6cm/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block google-btn-2 font-medium p-4 rounded-lg z-10 bg-[#FDEF78] text-black -mt-2 disabled:bg-[#AEAB8C]"
+                    >
+                      <div className="w-full flex justify-center items-center">
+                        <span>Download</span>
+                      </div>
+                    </a>
+                  </div>
+                  <div className="my-2">
+                    <p className="text-white md:text-black text-[10px] leading-3">
+                      Thank you for your interest in the Uni Card.
+                      <br />
+                      Download the Uni Cards app now and get your Uni Card in
+                      minutes.
+                    </p>
+                  </div>
                 </div>
-                <div className="my-2">
-                  <p className="text-white md:text-black text-[10px] leading-3">
-                    Thank you for your interest in the Uni Card.
-                    <br />
-                    Download the Uni Cards app now and get your Uni Card in
-                    minutes.
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
 
             <div className="md:hidden">
@@ -177,46 +194,79 @@ function App() {
               ) : (
                 <div>
                   {/* The input and checkbox components */}
-                  <form>
-                    <div className="flex bg-black p-1 pl-2 rounded-xl justify-between">
-                      <div className="flex items-center w-full">
+                  {!showDownloadButton && (
+                    <form onSubmit={handleSubmit}>
+                      <div className="flex bg-black p-1 pl-2 rounded-xl justify-between">
+                        <div className="flex items-center w-full">
+                          <input
+                            className="bg-black border-0 outline-none text-white p-1 placeholder-[#7E8587] w-full"
+                            placeholder="Enter Phone Number"
+                            value={phoneNumber}
+                            onChange={handlePhoneNumberChange}
+                          />
+                          {phoneNumber &&
+                            (isPhoneNumberValid ? (
+                              <span className="text-green-500 ml-2">
+                                &#x2714;
+                              </span>
+                            ) : (
+                              <span className="text-red-500 ml-2">!</span>
+                            ))}
+                        </div>
+                      </div>
+
+                      <div className="consent flex items-center py-4 px-2">
                         <input
-                          className="bg-black border-0 outline-none text-white p-1 placeholder-[#7E8587] w-full"
-                          placeholder="Enter Phone Number"
-                          value={phoneNumber}
-                          onChange={handlePhoneNumberChange}
+                          type="checkbox"
+                          id="consent-msg"
+                          checked={isCheckboxChecked}
+                          onChange={handleCheckboxChange}
+                          maxLength={10}
                         />
-                        {phoneNumber &&
-                          (isPhoneNumberValid ? (
-                            <span className="text-green-500 ml-2">
-                              &#x2714;
-                            </span>
-                          ) : (
-                            <span className="text-red-500 ml-2">!</span>
-                          ))}
+                        <label
+                          htmlFor="consent-msg"
+                          className="consent text-white text-[10px] leading-3"
+                        >
+                          You agree to be contacted by Uni Cards over Call, SMS,
+                          Email or WhatsApp to guide you through your
+                          application.
+                        </label>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full text-center text-sm leading-7 justify-between pt-2 bg-yellow-400 rounded-xl z-10 py-2 px-4"
+                      >
+                        {applyButtonText}
+                      </button>
+                    </form>
+                  )}
+
+                  {showDownloadButton && (
+                    <div className="flex max-w-xs flex-col justify-start mt-5">
+                      <div className="w-full max-w-[300px]">
+                        <a
+                          href="https://uni-growth.onelink.me/v6cm/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block google-btn-2 font-medium p-4 rounded-lg z-10 bg-[#FDEF78] text-black -mt-2 disabled:bg-[#AEAB8C]"
+                        >
+                          <div className="w-full flex justify-center items-center">
+                            <span>Download</span>
+                          </div>
+                        </a>
+                      </div>
+                      <div className="my-2">
+                        <p className="text-black text-[10px] leading-3">
+                          Thank you for your interest in the Uni Card.
+                          <br />
+                          Download the Uni Cards app now and get your Uni Card
+                          in minutes.
+                        </p>
                       </div>
                     </div>
-                  </form>
-
-                  <div className="consent flex items-center py-4 px-2">
-                    <input
-                      type="checkbox"
-                      id="consent-msg"
-                      checked={isCheckboxChecked}
-                      onChange={handleCheckboxChange}
-                      maxLength={10}
-                    />
-                    <label
-                      htmlFor="consent-msg"
-                      className="consent text-white text-[10px] leading-3"
-                    >
-                      You agree to be contacted by Uni Cards over Call, SMS,
-                      Email or WhatsApp to guide you through your application.
-                    </label>
-                  </div>
-
-                  <div className="w-full max-w-[300px]">
-                    <a
+                  )}
+                  {/* <a
                       onClick={(e) => {
                         setPhoneNumber(e.target.value);
                       }}
@@ -227,8 +277,7 @@ function App() {
                       <div className="w-full flex justify-center items-center">
                         <span>Apply Now</span>
                       </div>
-                    </a>
-                  </div>
+                    </a> */}
                 </div>
               )}
             </div>
