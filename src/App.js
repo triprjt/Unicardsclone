@@ -4,7 +4,6 @@ import nx_wave_hero from "./images/nx_wave/nx_wave_hero.png";
 import logo_uni_dbc4c88973 from "./images/logo_uni_dbc4c88973.png";
 import nxt_wave_bg from "./videos/nxt_wave_bg.mp4";
 import { useState } from "react";
-import Navbar from "./Components/Navbar";
 function App() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
@@ -19,6 +18,12 @@ function App() {
       setPhoneNumber(value);
       setIsFormValid(value.length === 10 && isCheckboxChecked);
     }
+  };
+
+  const [isInputVisible, setIsInputVisible] = useState(false);
+
+  const handleApplyNowClick = () => {
+    setIsInputVisible(true);
   };
 
   const handleCheckboxChange = (e) => {
@@ -39,7 +44,6 @@ function App() {
           <source src={nxt_wave_bg} type="video/mp4" />
         </video>
 
-        {/* <Navbar /> */}
         <div className="flex flex-col md:flex-row-reverse mx-auto max-w-[1280px] w-full justify-center z-1 bg-transparent">
           <img
             src={nx_wave_hero}
@@ -160,6 +164,73 @@ function App() {
                   </p>
                 </div>
               </div>
+            </div>
+
+            <div className="md:hidden">
+              {!isInputVisible ? (
+                <button
+                  onClick={handleApplyNowClick}
+                  className="w-full text-center text-sm leading-7 justify-between pt-2 bg-yellow-400 rounded-xl z-10 py-2 px-4"
+                >
+                  Apply Now
+                </button>
+              ) : (
+                <div>
+                  {/* The input and checkbox components */}
+                  <form>
+                    <div className="flex bg-black p-1 pl-2 rounded-xl justify-between">
+                      <div className="flex items-center w-full">
+                        <input
+                          className="bg-black border-0 outline-none text-white p-1 placeholder-[#7E8587] w-full"
+                          placeholder="Enter Phone Number"
+                          value={phoneNumber}
+                          onChange={handlePhoneNumberChange}
+                        />
+                        {phoneNumber &&
+                          (isPhoneNumberValid ? (
+                            <span className="text-green-500 ml-2">
+                              &#x2714;
+                            </span>
+                          ) : (
+                            <span className="text-red-500 ml-2">!</span>
+                          ))}
+                      </div>
+                    </div>
+                  </form>
+
+                  <div className="consent flex items-center py-4 px-2">
+                    <input
+                      type="checkbox"
+                      id="consent-msg"
+                      checked={isCheckboxChecked}
+                      onChange={handleCheckboxChange}
+                      maxLength={10}
+                    />
+                    <label
+                      htmlFor="consent-msg"
+                      className="consent text-white text-[10px] leading-3"
+                    >
+                      You agree to be contacted by Uni Cards over Call, SMS,
+                      Email or WhatsApp to guide you through your application.
+                    </label>
+                  </div>
+
+                  <div className="w-full max-w-[300px]">
+                    <a
+                      onClick={(e) => {
+                        setPhoneNumber(e.target.value);
+                      }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block google-btn-2 font-medium p-4 rounded-lg z-10 bg-[#FDEF78] text-black -mt-2 disabled:bg-[#AEAB8C]"
+                    >
+                      <div className="w-full flex justify-center items-center">
+                        <span>Apply Now</span>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
